@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: scheduler
+  datasource:
+    # Credentials come from the environment only (docker/.env in compose); there are no defaults for secrets.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/scheduler}
+    username: ${DB_USERNAME:scheduler}
+    password: ${DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never # Flyway V1 creates the QRTZ_* tables
+    wait-for-jobs-to-complete-on-shutdown: true
+    properties:
+      org.quartz.scheduler.instanceId: AUTO
+      # Jobs are scheduled inside our DB transaction, so Quartz's "new trigger" wake-up can fire before commit and
+      # miss it; a short idle wait bounds that pickup delay to ~5s (default is 30s).
+      org.quartz.scheduler.idleWaitTime: 5000
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+      # Job data holds strings only: no Java serialization round-trips through the database.
+      org.quartz.jobStore.useProperties: true
+      # Safe to run several backend replicas against the same database.
+      org.quartz.jobStore.isClustered: true
+      org.quartz.jobStore.misfireThreshold: 60000
+      org.quartz.threadPool.threadCount: 5
+
+server:
+  error:
+    include-stacktrace: never
+    include-message: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
