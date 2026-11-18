@@ -18,24 +18,68 @@ A full-stack app for scheduling executions of predefined tasks. You can schedule
 
 ---
 
-## Running the system
+## Quick start (for reviewers)
 
-**Prerequisite:** Docker with Compose v2.
+**You only need [Git](https://git-scm.com/) and [Docker Desktop](https://www.docker.com/products/docker-desktop/)** (or Docker Engine with Compose v2). Java, Maven and Node are *not* required: everything builds inside Docker.
+
+**1. Clone the repo:**
 
 ```bash
-cd docker
-# One-time: create the git-ignored .env with a random DB password (never printed)
+git clone https://github.com/assafm7/scheduling-system.git
+cd scheduling-system/docker
+```
+
+**2. Create `docker/.env` with a database password.**
+
+The app has no built-in default credentials, so you need to set one. Any value works. The file is git-ignored. Pick one of these:
+
+```bash
+# macOS / Linux / Git Bash
 echo "POSTGRES_PASSWORD=$(openssl rand -hex 16)" > .env
+```
+```powershell
+# Windows PowerShell
+"POSTGRES_PASSWORD=$([guid]::NewGuid().ToString('N'))" | Out-File -Encoding ascii .env
+```
+
+Or copy `.env.example` to `.env` and fill in a value.
+
+**3. Build and start everything:**
+
+```bash
 docker compose up --build
 ```
 
-Then open **http://localhost:3000**.
+The first build takes a few minutes while it downloads Maven and npm dependencies.
 
-- Task output goes to the backend log. Follow it with `docker compose logs -f backend`.
-- Only the frontend is published. Postgres and the backend live on the internal compose network, and the UI reaches the API through the Next.js `/api` rewrite.
-- Data and schedules survive restarts. `docker compose down -v` wipes them.
+**4. Open http://localhost:3000.**
 
-### Local development
+### Try it out
+
+1. Click **New scheduling**, choose the **Log message** task, enter a message, choose **Interval → every 1 minute**, and save. The form previews the next 5 run times before you save.
+2. In a second terminal, run `docker compose logs -f backend` from the `docker/` folder. Your message appears within about a minute, tagged with the scheduling's id.
+3. Try the other options:
+   - a **Weekly** or **Cron** schedule (e.g. `0 0/2 * * * ?`)
+   - the **Send email (simulated)** or **Database report** task
+   - **editing** a row
+   - the **Enabled** switch, which pauses a scheduling
+   - **deleting** a row
+4. Submit a form with a required parameter left empty, or with an invalid cron expression. Validation runs in the UI and again in the backend.
+5. Restart the stack (`docker compose restart`). Schedulings persist: they live in PostgreSQL, including Quartz's own job store.
+
+**To stop:** press `Ctrl+C`, then run `docker compose down`. Add `-v` to also delete the database volume.
+
+**Troubleshooting:**
+- *"required variable POSTGRES_PASSWORD is missing a value"*: step 2 was skipped. Run it from inside the `docker/` folder.
+- *Port 3000 is already in use*: change `"3000:3000"` in `docker/docker-compose.yml` to e.g. `"3001:3000"`.
+
+**Notes:**
+- Only the UI port is published. Postgres and the backend stay on the internal Docker network, and the UI reaches the API through the Next.js `/api` rewrite.
+- Task output goes to the backend log.
+
+---
+
+## Running for development
 
 ```bash
 # 1. Database only, published on 127.0.0.1:5432
