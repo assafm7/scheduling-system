@@ -1,5 +1,7 @@
 # Scheduling System
 
+[![CI](https://github.com/assafm7/scheduling-system/actions/workflows/ci.yml/badge.svg)](https://github.com/assafm7/scheduling-system/actions/workflows/ci.yml)
+
 A full-stack app for scheduling executions of predefined tasks. You can schedule one-time runs, every-N-minutes/hours/days intervals, weekly runs, or Quartz cron expressions, each in a chosen time zone.
 
 | Layer | Technology |
@@ -103,6 +105,13 @@ cd frontend && npm run lint && npm run typecheck
 ```
 
 Run a single test with `./mvnw test -Dtest=TriggerFactoryTest` or `npx vitest run src/path/to/file.test.tsx`.
+
+**CI** (`.github/workflows/ci.yml`) runs on every push and pull request:
+- backend `./mvnw verify`, including the Testcontainers integration tests
+- frontend lint, typecheck, tests with coverage, and production build
+- a Docker image build of the whole stack
+
+Coverage reports are uploaded as artifacts. The workflow has read-only permissions, and its actions are pinned to commit SHAs.
 
 ---
 
