@@ -13,10 +13,15 @@ export function browserTimeZone(): string {
 export function timeZoneOffsetLabel(timeZone: string, at: Date = new Date()): string {
   try {
     const parts = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" }).formatToParts(at);
-    return parts.find((part) => part.type === "timeZoneName")?.value ?? "";
+    return normalizeOffset(parts.find((part) => part.type === "timeZoneName")?.value ?? "");
   } catch {
     return "";
   }
+}
+
+/** ICU versions disagree on a zero offset ("GMT" vs "GMT+0"); render it the same everywhere. */
+export function normalizeOffset(label: string): string {
+  return /^GMT[+-]0(:00)?$/.test(label) ? "GMT" : label;
 }
 
 let cachedZones: string[] | null = null;
