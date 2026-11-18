@@ -1,0 +1,7 @@
+# Force LF so scripts (mvnw, entrypoints) work inside Linux containers
+* text=auto eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.jar binary
+*.png binary
+*.ico binary

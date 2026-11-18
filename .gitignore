@@ -1,0 +1,23 @@
+# Assignment spec (not part of the deliverable)
+*.pdf
+
+# Secrets / local env
+.env
+*.env.local
+
+# Java / Maven
+target/
+*.class
+*.log
+
+# Node / Vite
+node_modules/
+dist/
+coverage/
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
