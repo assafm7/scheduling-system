@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scheduling System – Home Assignment Submission</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  :root {
+    --ink: #1d2433; --muted: #5b6475; --line: #e3e7ee; --accent: #1f6feb; --accent-soft: #eaf2ff;
+    --ok: #1a7f37; --ok-soft: #e8f6ec; --code: #f5f7fa;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.5; margin: 0; }
+  h1 { font-size: 26pt; margin: 0 0 6px; letter-spacing: -0.5px; }
+  h2 { font-size: 15pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
+  h3 { font-size: 11.5pt; margin: 16px 0 6px; }
+  p { margin: 6px 0; }
+  a { color: var(--accent); text-decoration: none; }
+  code, pre { font-family: "Cascadia Code", Consolas, monospace; font-size: 9pt; }
+  code { background: var(--code); padding: 1px 4px; border-radius: 3px; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; margin: 8px 0; white-space: pre-wrap; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 9.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { background: #f3f5f9; font-weight: 600; }
+  section { page-break-before: always; }
+  .avoid-break { break-inside: avoid; }
+  .muted { color: var(--muted); }
+  .check { color: var(--ok); font-weight: 700; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 2px 10px; margin: 2px 4px 2px 0; font-size: 9pt; font-weight: 600; }
+  .cover { height: 260mm; display: flex; flex-direction: column; justify-content: space-between; }
+  .cover .eyebrow { text-transform: uppercase; letter-spacing: 2px; color: var(--accent); font-weight: 700; font-size: 10pt; }
+  .cover .subtitle { font-size: 13pt; color: var(--muted); max-width: 150mm; }
+  .cover .meta td { border: none; padding: 3px 12px 3px 0; font-size: 10.5pt; }
+  .cover .meta td:first-child { color: var(--muted); width: 38mm; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
+  .stat { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .stat .n { font-size: 18pt; font-weight: 700; color: var(--accent); line-height: 1.1; }
+  .stat .l { font-size: 8.5pt; color: var(--muted); }
+  .shot { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin: 10px 0 4px; }
+  .shot img { width: 100%; display: block; }
+  .caption { font-size: 8.5pt; color: var(--muted); margin-bottom: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); padding: 8px 12px; border-radius: 4px; margin: 10px 0; }
+  ol, ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div>
+    <div class="eyebrow">Home Assignment Submission</div>
+    <h1>Scheduling System</h1>
+    <p class="subtitle">A full-stack system for scheduling executions of predefined tasks. It supports one-time, interval, weekly and cron schedules, and runs them with Quartz on Spring Boot, behind a Next.js + Ant Design UI.</p>
+    <div style="margin-top:14px">
+      <span class="pill">React · Next.js 16</span><span class="pill">Java 21 · Spring Boot 4.1</span>
+      <span class="pill">Quartz 2.5 (JDBC store)</span><span class="pill">PostgreSQL 17</span><span class="pill">Docker Compose</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n">4</div><div class="l">schedule types<br>one-time · interval · weekly · cron</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">predefined tasks<br>with parameter schemas</div></div>
+      <div class="stat"><div class="n">201</div><div class="l">automated tests<br>(backend 60 · frontend 141)</div></div>
+      <div class="stat"><div class="n">96.6%</div><div class="l">backend line coverage<br>(frontend 97.2%)</div></div>
+    </div>
+  </div>
+  <table class="meta">
+    <tr><td>Repository</td><td><a href="https://github.com/assafm7/scheduling-system">github.com/assafm7/scheduling-system</a></td></tr>
+    <tr><td>Submitted by</td><td>Assaf Meirom</td></tr>
+    <tr><td>Date</td><td>November 18, 2026</td></tr>
+    <tr><td>Run it</td><td><code>cd docker</code> → create <code>.env</code> → <code>docker compose up --build</code> → <a href="http://localhost:3000">localhost:3000</a></td></tr>
+  </table>
+</div>
+
+<!-- ============================== REQUIREMENTS ============================== -->
+<section>
+  <h2>1. Requirements coverage</h2>
+  <table>
+    <tr><th style="width:34%">Requirement</th><th>How it is met</th></tr>
+    <tr><td><span class="check">✓</span> React UI: table of all schedulings</td><td>An Ant Design table with name, task, human-readable schedule, parameters, next run (local time), an enabled switch and a status tag</td></tr>
+    <tr><td><span class="check">✓</span> Full CRUD for schedulings</td><td>Create and edit in a modal form, delete with confirmation. Backed by <code>POST/GET/PUT/DELETE /api/schedulings</code></td></tr>
+    <tr><td><span class="check">✓</span> Select a task from a predefined list</td><td>Task select populated from <code>GET /api/tasks</code>, with each task's description shown</td></tr>
+    <tr><td><span class="check">✓</span> Schedule timing configuration</td><td>Segmented control: one-time, interval (every N minutes/hours/days), weekly (days + time), cron (Quartz syntax with presets), each with a time zone. A <b>live preview of the next 5 runs</b> comes from the backend</td></tr>
+    <tr><td><span class="check">✓</span> Task parameter inputs</td><td>Rendered dynamically from each task's parameter schema (text, number, boolean, email, enum)</td></tr>
+    <tr><td><span class="check">✓</span> One-time, recurring, weekly, cron</td><td>Mapped to Quartz <code>SimpleTrigger</code> / <code>CronTrigger</code> by <code>TriggerFactory</code>, with misfire policies per type</td></tr>
+    <tr><td><span class="check">✓</span> Spring Boot CRUD APIs</td><td>REST controllers with RFC 9457 ProblemDetail errors, field-keyed validation messages, 404s, and 409 on concurrent edits (optimistic locking)</td></tr>
+    <tr><td><span class="check">✓</span> Quartz integration and job execution</td><td>JDBC job store in the same PostgreSQL. One generic <code>TaskExecutionJob</code> runs the task with its stored parameters. Failures are contained</td></tr>
+    <tr><td><span class="check">✓</span> Persist all relevant data</td><td>Schedulings in PostgreSQL (Flyway migrations), and Quartz jobs and triggers in the same database. Everything survives restarts</td></tr>
+    <tr><td><span class="check">✓</span> Predefined, read-only tasks</td><td><code>LOG</code>, <code>EMAIL</code> (simulated), <code>DB_REPORT</code> (allow-listed queries). Defined in code, with no write endpoints</td></tr>
+    <tr><td><span class="check">✓</span> Parameters passed to the task at execution</td><td>Stored in the Quartz job data (as JSON strings) and handed to <code>ScheduledTask.execute(TaskContext)</code>. Verified by an integration test that waits for a real execution</td></tr>
+    <tr><td><span class="check">✓</span> <b>Bonus:</b> parameter schema per task</td><td>Name, label, type, required flag, plus enum options and max length</td></tr>
+    <tr><td><span class="check">✓</span> <b>Bonus:</b> required parameters enforced in UI and backend</td><td>Ant Design form rules come from the schema. <code>ParameterValidator</code> on the server is authoritative</td></tr>
+    <tr><td><span class="check">✓</span> Unit + integration tests, coverage</td><td>60 backend tests (96.6% lines, JaCoCo) including Testcontainers integration tests; 141 frontend tests (97.2% lines, Vitest + RTL)</td></tr>
+    <tr><td><span class="check">✓</span> <code>/frontend</code>, <code>/backend</code>, <code>/docker</code>, Dockerfiles, compose</td><td>Multi-stage, non-root images. One <code>docker compose up --build</code> runs everything</td></tr>
+    <tr><td><span class="check">✓</span> README: run, design decisions, assumptions</td><td><code>README.md</code> has a reviewer quick start (macOS/Linux/Windows), design decisions, assumptions and the OWASP review</td></tr>
+    <tr><td><span class="check">✓</span> AI tools disclosure</td><td>Section 8 of this document and the README</td></tr>
+  </table>
+</section>
+
+<!-- ============================== HOW TO RUN ============================== -->
+<section>
+  <h2>2. How to run</h2>
+  <p>You only need <b>Git</b> and <b>Docker Desktop</b>. Java and Node are not required, because everything builds inside Docker.</p>
+<pre>git clone https://github.com/assafm7/scheduling-system.git
+cd scheduling-system/docker
+
+# Create the git-ignored .env with a DB password (there are no built-in default credentials)
+echo "POSTGRES_PASSWORD=$(openssl rand -hex 16)" > .env                              # macOS / Linux / Git Bash
+"POSTGRES_PASSWORD=$([guid]::NewGuid().ToString('N'))" | Out-File -Encoding ascii .env # Windows PowerShell
+
+docker compose up --build        # first build takes a few minutes
+# open http://localhost:3000</pre>
+  <h3>Suggested walkthrough</h3>
+  <ol>
+    <li><b>New scheduling</b> → task <i>Log message</i> → enter a message → <i>Interval, every 1 minute</i>. The form previews the next 5 runs. Save.</li>
+    <li>Run <code>docker compose logs -f backend</code>. The message appears within about a minute, tagged with the scheduling id.</li>
+    <li>Try a <i>Weekly</i> or <i>Cron</i> schedule, the <i>Send email (simulated)</i> and <i>Database report</i> tasks, editing, the Enabled switch (pause), and deleting.</li>
+    <li>Leave a required parameter empty, or enter an invalid or too-frequent cron. It's rejected in the UI and by the API.</li>
+    <li><code>docker compose restart</code>: schedulings persist, because Quartz keeps its state in PostgreSQL.</li>
+  </ol>
+  <h3>Tests</h3>
+<pre>cd backend  &amp;&amp; ./mvnw verify          # unit + Testcontainers integration tests, JaCoCo report
+cd frontend &amp;&amp; npm ci &amp;&amp; npm test     # unit + component tests (npm run test:coverage for coverage)</pre>
+</section>
+
+<!-- ============================== SCREENSHOTS ============================== -->
+<section>
+  <h2>3. User interface</h2>
+  
+  <div class="shot"><img src="screenshots/01-table.png" alt="Schedulings table"></div>
+  <div class="caption">Schedulings table: every schedule type rendered in plain language (cron via cronstrue, with the raw expression), parameters as compact tags with &quot;+N more&quot;, next run in local time with relative time, Enabled switch with status tag (Active / Paused / Completed), and row actions.</div>
+  <div class="grid2">
+    <div><div class="shot"><img src="screenshots/03-validation.png" alt="Validation"></div>
+      <div class="caption">Create form with schema-driven required-field validation. The interval schedule already shows the live next-runs preview.</div></div>
+    <div><div class="shot"><img src="screenshots/04-edit-weekly.png" alt="Edit weekly"></div>
+      <div class="caption">Edit form prefilled from the server: task parameters rendered from the task schema, weekday picker with presets, time zone, and next 5 runs.</div></div>
+  </div>
+  <div class="grid2" style="margin-top:6px">
+    <div><div class="shot"><img src="screenshots/05-cron-rejected.png" alt="Cron rejected"></div>
+      <div class="caption">Cron mode with a Quartz format hint and presets. An every-10-seconds expression is rejected live by the backend preview (minimum frequency is once a minute).</div></div>
+    <div>
+      <h3 style="margin-top:4px">UX details</h3>
+      <ul>
+        <li>One form for create and edit. The task select shows each task&apos;s description, and changing the task resets its parameters.</li>
+        <li>Parameter inputs come from the schema: text, number, switch, email and select. Required and max-length rules come from the schema too.</li>
+        <li>Server validation errors (<code>parameters.x</code>, <code>schedule.x</code>) are attached to the matching form field.</li>
+        <li>A concurrent edit (409) keeps the modal open and offers a reload with the latest version.</li>
+        <li>Debounced <b>next-runs preview</b> calculated by the backend&apos;s own trigger logic.</li>
+        <li>Search, sorting, auto-refresh of next run and status, success and error toasts, and delete confirmation.</li>
+        <li>Accessible: labelled inputs, <code>aria-label</code>s on icon buttons (e.g. &quot;Edit Weekly report&quot;), and keyboard-friendly forms.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== ARCHITECTURE ============================== -->
+<section>
+  <h2>4. Architecture</h2>
+  <svg viewBox="0 0 760 250" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="12">
+    <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#5b6475"/></marker></defs>
+    <rect x="10" y="95" width="100" height="50" rx="8" fill="#f3f5f9" stroke="#c9d1de"/><text x="60" y="125" text-anchor="middle">Browser</text>
+    <rect x="160" y="80" width="150" height="80" rx="8" fill="#eaf2ff" stroke="#1f6feb"/>
+    <text x="235" y="110" text-anchor="middle" font-weight="600">Next.js server</text><text x="235" y="128" text-anchor="middle" fill="#5b6475">UI + /api rewrite</text><text x="235" y="146" text-anchor="middle" fill="#5b6475">:3000 (only public port)</text>
+    <rect x="360" y="20" width="190" height="210" rx="8" fill="#fff" stroke="#1f6feb"/>
+    <text x="455" y="42" text-anchor="middle" font-weight="600">Spring Boot backend</text>
+    <rect x="375" y="55" width="160" height="30" rx="5" fill="#f3f5f9" stroke="#c9d1de"/><text x="455" y="75" text-anchor="middle">REST controllers</text>
+    <rect x="375" y="95" width="160" height="30" rx="5" fill="#f3f5f9" stroke="#c9d1de"/><text x="455" y="115" text-anchor="middle">SchedulingService (@Tx)</text>
+    <rect x="375" y="135" width="160" height="30" rx="5" fill="#f3f5f9" stroke="#c9d1de"/><text x="455" y="155" text-anchor="middle">Quartz Scheduler</text>
+    <rect x="375" y="175" width="160" height="42" rx="5" fill="#f3f5f9" stroke="#c9d1de"/><text x="455" y="193" text-anchor="middle">TaskExecutionJob →</text><text x="455" y="209" text-anchor="middle" fill="#5b6475">LOG · EMAIL · DB_REPORT</text>
+    <rect x="610" y="85" width="140" height="70" rx="8" fill="#e8f6ec" stroke="#1a7f37"/>
+    <text x="680" y="112" text-anchor="middle" font-weight="600">PostgreSQL</text><text x="680" y="130" text-anchor="middle" fill="#5b6475">scheduling +</text><text x="680" y="146" text-anchor="middle" fill="#5b6475">QRTZ_* tables</text>
+    <line x1="110" y1="120" x2="158" y2="120" stroke="#5b6475" marker-end="url(#a)"/>
+    <line x1="310" y1="110" x2="373" y2="72" stroke="#5b6475" marker-end="url(#a)"/>
+    <line x1="455" y1="85" x2="455" y2="93" stroke="#5b6475" marker-end="url(#a)"/>
+    <line x1="455" y1="125" x2="455" y2="133" stroke="#5b6475" marker-end="url(#a)"/>
+    <line x1="455" y1="165" x2="455" y2="173" stroke="#5b6475" marker-end="url(#a)"/>
+    <line x1="535" y1="110" x2="608" y2="113" stroke="#1a7f37" marker-end="url(#a)"/><text x="572" y="102" text-anchor="middle" font-size="10" fill="#1a7f37">JPA</text>
+    <line x1="535" y1="150" x2="608" y2="135" stroke="#1a7f37" marker-end="url(#a)"/><text x="575" y="160" text-anchor="middle" font-size="10" fill="#1a7f37">same tx</text>
+  </svg>
+  <div class="callout"><b>Key property:</b> the <code>scheduling</code> row and its Quartz job and trigger are written in <b>one database transaction</b> (Spring's <code>LocalDataSourceJobStore</code>). The table and the scheduler can never drift apart, and an integration test proves the rollback.</div>
+  <h3>Create flow</h3>
+  <ol>
+    <li>Bean Validation on the request DTO.</li>
+    <li><code>SchedulingService</code> validates everything up front and returns <i>all</i> field errors at once: the task exists, the parameters match the task schema, and the schedule is valid. Errors are keyed like <code>parameters.message</code> or <code>schedule.expression</code>, and the UI attaches each one to its form field.</li>
+    <li>In one transaction, it saves the entity and creates the Quartz job (durable, keyed by scheduling id) and its trigger.</li>
+    <li>When the trigger fires, <code>TaskExecutionJob</code> looks up the task by key and executes it with the stored parameters. Each run is logged with <code>schedulingId</code> and <code>taskKey</code> in the MDC.</li>
+  </ol>
+  <h3>Code map</h3>
+  <table>
+    <tr><th style="width:30%">Backend package</th><th>Responsibility</th></tr>
+    <tr><td><code>task</code></td><td><code>ScheduledTask</code> contract, parameter schema, <code>TaskRegistry</code>, <code>ParameterValidator</code>, read-only <code>/api/tasks</code></td></tr>
+    <tr><td><code>scheduling</code></td><td>Entity, repository, service (transaction boundary), REST controller, sealed <code>ScheduleSpec</code> records</td></tr>
+    <tr><td><code>quartz</code></td><td><code>TriggerFactory</code> (validation + spec → trigger + preview), <code>QuartzJobManager</code>, <code>TaskExecutionJob</code></td></tr>
+    <tr><td><code>common</code></td><td>ProblemDetail exception handler, log sanitizer, JSON helper</td></tr>
+    <tr><th>Frontend</th><th></th></tr>
+    <tr><td><code>src/api</code>, <code>src/hooks</code></td><td>Typed API client (ProblemDetail → <code>ApiError</code>), TanStack Query hooks</td></tr>
+    <tr><td><code>src/components</code></td><td>Schedulings table, form modal, schema-driven parameter fields, schedule fields, next-runs preview</td></tr>
+  </table>
+</section>
+
+<!-- ============================== DESIGN DECISIONS ============================== -->
+<section>
+  <h2>5. Design decisions</h2>
+  <table>
+    <tr><th style="width:30%">Decision</th><th>Why</th></tr>
+    <tr><td>Quartz JDBC job store in the same PostgreSQL, sharing the transaction</td><td>Atomic create, update and delete across our table and Quartz. Schedules persist across restarts. Clustered mode makes it safe to run several backend replicas</td></tr>
+    <tr><td>One generic job class, with tasks as Spring beans</td><td>Adding a task means adding one <code>@Component</code> with no Quartz code. The task catalog is read-only by construction</td></tr>
+    <tr><td>Sealed <code>ScheduleSpec</code> + a single <code>TriggerFactory</code></td><td>One place validates and translates schedules. It's pure apart from an injected <code>Clock</code>, so it's fully unit-tested. It also powers the UI preview, so the preview can't disagree with real execution</td></tr>
+    <tr><td>Edits use delete-then-schedule (not <code>replace=true</code>)</td><td>Quartz's JDBC store can't replace a trigger with one of a different type (cron ↔ simple). Our integration test caught this. Delete-then-create in the same transaction is still atomic</td></tr>
+    <tr><td><code>idleWaitTime</code> = 5s</td><td>Because jobs are scheduled inside our transaction, Quartz's wake-up can run before commit. This bounds the pickup delay to about 5s instead of the default 30s</td></tr>
+    <tr><td>Schema-driven parameters</td><td>One definition drives the UI form and the server validation. Unknown parameters are rejected, and values are trimmed and typed</td></tr>
+    <tr><td>Optimistic locking (<code>version</code>)</td><td>Concurrent edits get a 409 instead of silently losing an update</td></tr>
+    <tr><td>Same-origin <code>/api</code> through a Next.js rewrite</td><td>No CORS surface. The backend and DB are not published outside the Docker network</td></tr>
+    <tr><td>Flyway owns all DDL</td><td>Includes the official Quartz Postgres schema. Hibernate only validates</td></tr>
+    <tr><td>Ant Design + TanStack Query</td><td>Production-grade table, form and date/time widgets, plus caching and invalidation, with little glue code. The list auto-refreshes so the next run and status stay current</td></tr>
+  </table>
+  <h3>Assumptions</h3>
+  <ul>
+    <li><b>No authentication.</b> The spec doesn't mention users, so this is a single-user internal tool. Only the UI port is exposed. The next step would be Spring Security with OIDC and an owner per scheduling.</li>
+    <li>Tasks are defined in code. The email task is <b>simulated</b> and only logs.</li>
+    <li>Every schedule has an IANA time zone, defaulting to the browser's. The UI shows times in the viewer's local time.</li>
+    <li>Interval schedules first fire one interval after being saved. One-time runs must be in the future. The highest allowed frequency is once a minute.</li>
+    <li>Disabling a scheduling pauses its Quartz trigger. Re-enabling reschedules it from now.</li>
+  </ul>
+</section>
+
+<!-- ============================== TESTING ============================== -->
+<section>
+  <h2>6. Testing</h2>
+  <div class="stats">
+    <div class="stat"><div class="n">60</div><div class="l">backend tests</div></div>
+    <div class="stat"><div class="n">96.6%</div><div class="l">backend line coverage<br>(86.5% branches)</div></div>
+    <div class="stat"><div class="n">141</div><div class="l">frontend tests</div></div>
+    <div class="stat"><div class="n">97.2%</div><div class="l">frontend line coverage</div></div>
+  </div>
+  <h3>Backend (JUnit 5, Mockito, AssertJ, Testcontainers, JaCoCo)</h3>
+  <table>
+    <tr><th style="width:32%">Test</th><th>What it proves</th></tr>
+    <tr><td><code>SchedulingApiIntegrationTest</code></td><td>The real HTTP → JPA → Flyway → Quartz stack against <b>PostgreSQL in Testcontainers</b>:
+      <ul>
+        <li>full CRUD with Quartz state asserted at each step</li>
+        <li>ProblemDetail validation errors, 404 and 409</li>
+        <li><b>a real job firing</b> with its parameters</li>
+        <li><b>DB and Quartz rollback atomicity</b></li>
+      </ul></td></tr>
+    <tr><td><code>TriggerFactoryTest</code></td><td>Every schedule type, time zones, past and too-frequent schedules, invalid cron and zone, the weekly → cron mapping, and the preview</td></tr>
+    <tr><td><code>ParameterValidatorTest</code></td><td>Required, type, email, enum, length and unknown parameters (parameterized), plus normalization</td></tr>
+    <tr><td><code>SchedulingServiceTest</code></td><td>Orchestration with mocks: all errors at once, nothing persisted on failure, version conflicts, deletion</td></tr>
+    <tr><td><code>TaskExecutionJobTest</code>, task tests</td><td>Parameters reach the task, failures are contained without a refire loop, log-injection is neutralized, and DB_REPORT runs only the fixed SQL</td></tr>
+  </table>
+  <h3>Frontend (Vitest, React Testing Library)</h3>
+  
+  <table>
+    <tr><th style="width:32%">Area</th><th>What is tested (behavior-focused: RTL queries by role and label)</th></tr>
+    <tr><td><code>SchedulingFormModal</code></td><td>Create payload is exact. Edit prefill and the PUT includes <code>version</code>. Changing the task resets parameters. Server 400 field errors are mapped onto fields. A 409 conflict offers a reload</td></tr>
+    <tr><td><code>SchedulingsTable</code>, <code>SchedulingsPage</code></td><td>Rows, empty, loading and error-with-retry states. The Enabled toggle sends an update. Delete asks for confirmation. Status tags. Search</td></tr>
+    <tr><td><code>ScheduleFields</code>, <code>DaysOfWeekPicker</code></td><td>Switching between the 4 types shows the right inputs. Weekday toggles and presets. Time zone default</td></tr>
+    <tr><td><code>NextRunsPreview</code></td><td>Renders fire times, shows the backend validation message inline, and debounces requests (fake timers)</td></tr>
+    <tr><td><code>TaskParameterFields</code></td><td>The right input per parameter type. Required rules block submit</td></tr>
+    <tr><td><code>api/client</code>, hooks</td><td>JSON, 204 and ProblemDetail become <code>ApiError</code> with sanitized field errors. Mutations invalidate the list query</td></tr>
+    <tr><td>Utilities</td><td>Schedule descriptions, spec ↔ form conversion for all 4 types, error-key mapping, time zones</td></tr>
+  </table>
+  <p class="muted">19 test files · 141 tests · lines 97.2% · statements 96.6% · branches 89.2% · functions 99.4%. The API module is mocked, so there are no network calls.</p>
+</section>
+
+<!-- ============================== SECURITY ============================== -->
+<section>
+  <h2>7. Security review: OWASP Top 10:2025</h2>
+  <table>
+    <tr><th style="width:24%">Risk</th><th>Mitigation in this system</th></tr>
+    <tr><td>A01 Broken Access Control</td><td>No task write endpoints (read-only catalog). UUID identifiers. Same-origin only, with no CORS. No URL-fetching task, deliberately, to avoid SSRF</td></tr>
+    <tr><td>A02 Security Misconfiguration</td><td>DB password <b>required</b> from a git-ignored <code>.env</code>, with no defaults. Only the UI port is published. Actuator exposes <code>health</code> only. No stack traces in responses. CSP and security headers. Non-root containers</td></tr>
+    <tr><td>A03 Software Supply Chain Failures</td><td>Current supported versions. Lockfile with <code>npm ci</code>. Maven wrapper. Pinned image tags. <code>npm audit --omit=dev</code> reports 0 vulnerabilities (the remaining advisories are dev-only lint tooling)</td></tr>
+    <tr><td>A04 Cryptographic Failures</td><td>No sensitive data stored. Secrets only through the environment. TLS belongs at the ingress in a real deployment</td></tr>
+    <tr><td>A05 Injection</td><td>JPA and parameterized SQL only. DB_REPORT uses allow-listed fixed queries. Schema validation server-side. Cron parsed and validated. Control characters stripped before logging. React escaping</td></tr>
+    <tr><td>A06 Insecure Design</td><td>Maximum frequency of once a minute. Length limits on all fields. <code>@DisallowConcurrentExecution</code>. Bounded thread pool</td></tr>
+    <tr><td>A07 Authentication Failures</td><td>Out of scope, as a documented assumption. Minimal exposed surface</td></tr>
+    <tr><td>A08 Software &amp; Data Integrity Failures</td><td>Polymorphic JSON limited to an explicit subtype allow-list. Quartz job data stored as strings only, so there's no Java deserialization</td></tr>
+    <tr><td>A09 Security Logging &amp; Alerting Failures</td><td>Create, update and delete are logged with IDs. Every job run and failure is logged with <code>schedulingId</code> and <code>taskKey</code> in the MDC. User input is sanitized before logging</td></tr>
+    <tr><td>A10 Mishandling of Exceptional Conditions</td><td>Global ProblemDetail handler with a generic 500. Task failures are contained. Validation fails closed</td></tr>
+  </table>
+</section>
+
+<!-- ============================== AI ============================== -->
+<section>
+  <h2>8. Use of AI tools</h2>
+  <p>I built this project with <b>Claude Code</b> (Anthropic's CLI coding agent, model Claude Opus 5.5) as a pair programmer, and stayed in the loop on every decision:</p>
+  <ul>
+    <li><b>Planning:</b> Claude Code turned the assignment into an implementation plan, a 3-hour timeline, an API contract and an OWASP review. I reviewed and adjusted it, for example choosing Next.js over Vite, Java 21, and Ant Design.</li>
+    <li><b>Implementation:</b> Claude Code wrote the backend in the main session. In parallel, a separate Claude Code sub-agent built the frontend on its own git branch (<code>feature/frontend</code>) against the agreed API contract. The branch was then merged.</li>
+    <li><b>Verification:</b> Claude Code ran builds, tests, API smoke tests and Docker locally. The integration tests found a real Quartz issue (changing the trigger type on edit), which shaped a design decision.</li>
+    <li><b>Traceability:</b> every AI-assisted commit carries a <code>Co-Authored-By: Claude</code> trailer, so the history shows how the work progressed.</li>
+  </ul>
+</section>
+
+</body>
+</html>

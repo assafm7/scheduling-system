@@ -12,6 +12,10 @@ A full-stack app for scheduling executions of predefined tasks. You can schedule
 | Tests | JUnit 5 · Mockito · Testcontainers · JaCoCo · Vitest · React Testing Library |
 | Delivery | Docker multi-stage images · docker-compose |
 
+![Schedulings table](docs/screenshots/01-table.png)
+
+📄 **[Submission document (PDF)](docs/Submission.pdf)**: a requirements checklist, screenshots, architecture, design decisions, testing, the OWASP review and AI usage, in one file.
+
 ```
 /backend    Spring Boot service (REST API + Quartz)
 /frontend   Next.js UI
@@ -262,7 +266,22 @@ flowchart LR
 
 ### Frontend tests
 
-_To be completed after the frontend merge._
+**141 tests in 19 files, with 97.2% line, 89.2% branch and 99.4% function coverage** (Vitest + React Testing Library). Every component has its own test file. Tests are behavior-focused: they query by role and label, and mock only the API module.
+- **Create/edit form:**
+  - exact create payload
+  - edit prefill, with `version` included in the PUT
+  - changing the task resets its parameters
+  - server 400 field errors mapped onto fields
+  - 409 conflict with reload
+- **Table and page:**
+  - rows, empty, loading and error-with-retry states
+  - the Enabled toggle sends an update
+  - delete confirmation
+  - status tags and search
+- **Schedule fields:** all 4 types, weekday picker presets, time-zone default.
+- **Next-runs preview:** renders fire times, shows backend validation messages inline, and debounces (fake timers).
+- **API client and hooks:** ProblemDetail becomes `ApiError` with sanitized field errors; mutations invalidate the list.
+- **Utilities:** schedule descriptions and spec ↔ form conversion for every type.
 
 ## Use of AI tools
 
