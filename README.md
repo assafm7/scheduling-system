@@ -1,5 +1,7 @@
 # Scheduling System
 
+[![CI](https://github.com/assafm7/scheduling-system/actions/workflows/ci.yml/badge.svg)](https://github.com/assafm7/scheduling-system/actions/workflows/ci.yml)
+
 A full-stack app for scheduling executions of predefined tasks. You can schedule one-time runs, every-N-minutes/hours/days intervals, weekly runs, or Quartz cron expressions, each in a chosen time zone.
 
 | Layer | Technology |
