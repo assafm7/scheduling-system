@@ -33,6 +33,10 @@ public class DbReportTask implements ScheduledTask {
 		Report(String sql) {
 			this.sql = sql;
 		}
+
+		String sql() {
+			return sql;
+		}
 	}
 
 	private final JdbcTemplate jdbcTemplate;

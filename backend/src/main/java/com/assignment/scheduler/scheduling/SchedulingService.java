@@ -136,6 +136,6 @@ public class SchedulingService {
 		String taskName = taskRegistry.find(s.getTaskKey()).map(ScheduledTask::name).orElse(s.getTaskKey());
 		return new SchedulingResponse(s.getId(), s.getName(), s.getDescription(), s.getTaskKey(), taskName,
 				s.getParameters(), s.getSchedule(), s.isEnabled(), state.status(), state.nextFireTime(),
-				s.getVersion(), s.getCreatedAt(), s.getUpdatedAt());
+				Objects.requireNonNullElse(s.getVersion(), 0L), s.getCreatedAt(), s.getUpdatedAt());
 	}
 }

@@ -50,7 +50,10 @@ public class QuartzJobManager {
 			.build();
 		Trigger trigger = triggerFactory.build(scheduling.getSchedule(), triggerKey(scheduling.getId()));
 		try {
-			scheduler.scheduleJob(job, Set.of(trigger), true);
+			// Delete-then-create instead of replace=true: the JDBC store cannot replace a trigger with one of a
+			// different type (e.g. cron -> simple) and would leave a dangling row. Same transaction, so still atomic.
+			scheduler.deleteJob(job.getKey());
+			scheduler.scheduleJob(job, Set.of(trigger), false);
 			if (!scheduling.isEnabled()) {
 				scheduler.pauseJob(job.getKey());
 			}
