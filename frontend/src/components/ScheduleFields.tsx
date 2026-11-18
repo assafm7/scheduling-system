@@ -64,7 +64,8 @@ function CronHelp({ expression }: { expression: string }) {
   return (
     <Flex vertical gap={2}>
       {description && (
-        <Typography.Text type="success" data-testid="cron-description">
+        // Neutral on purpose: this explains what the expression means; validity is shown by the run preview.
+        <Typography.Text data-testid="cron-description">
           {description}
         </Typography.Text>
       )}
