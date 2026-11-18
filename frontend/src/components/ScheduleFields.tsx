@@ -106,6 +106,7 @@ export function ScheduleFields() {
       name={["schedule", "timeZone"]}
       label="Time zone"
       rules={[{ required: true, message: "Select a time zone" }]}
+      extra="Times follow this zone's local clock, including daylight saving."
     >
       <Select
         showSearch={{ filterOption: filterTimeZone }}

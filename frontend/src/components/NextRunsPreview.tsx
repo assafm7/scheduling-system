@@ -10,14 +10,19 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useNow } from "@/hooks/useNow";
 import dayjs from "@/utils/dayjs";
 import { describeSchedule } from "@/utils/describeSchedule";
+import { errorSentence } from "@/utils/formErrors";
 import { browserTimeZone } from "@/utils/timeZones";
 
 export const PREVIEW_DEBOUNCE_MS = 400;
 
 function previewErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
-    const fieldMessages = Object.values(error.fieldErrors);
-    if (error.isValidation && fieldMessages.length > 0) return fieldMessages.join(" ");
+    const entries = Object.entries(error.fieldErrors);
+    if (error.isValidation && entries.length > 0) {
+      return entries
+        .map(([key, message]) => errorSentence(key.startsWith("schedule") ? key : `schedule.${key}`, message))
+        .join(" ");
+    }
     return error.message;
   }
   return "The preview is unavailable right now.";

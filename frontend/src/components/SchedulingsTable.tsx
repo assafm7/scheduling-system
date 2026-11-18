@@ -11,7 +11,7 @@ import {
   ReloadOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Alert, App, Button, Empty, Flex, Input, Popconfirm, Skeleton, Space, Switch, Table, Tag, Tooltip, Typography } from "antd";
+import { Alert, App, Button, Empty, Flex, Grid, Input, Popconfirm, Skeleton, Space, Switch, Table, Tag, Tooltip, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useMemo, useState, type ReactNode } from "react";
 import { ApiError, CONFLICT_MESSAGE } from "@/api/client";
@@ -25,10 +25,16 @@ import { browserTimeZone } from "@/utils/timeZones";
 
 const MAX_PARAMETER_TAGS = 2;
 
-// Explicit widths keep the table inside its card at laptop widths (1280–1440px); the Schedule
-// column takes the remaining space. Below TABLE_MIN_WIDTH the table scrolls with Actions pinned.
-const COLUMN_WIDTHS = { name: 200, task: 130, parameters: 180, nextRun: 165, status: 150, actions: 92 } as const;
-const TABLE_MIN_WIDTH = 1120;
+// Explicit widths keep the table inside its card on laptops; the Schedule column takes the
+// remaining space. Task and Parameters drop out on narrower screens, and below the resulting
+// minimum width the table scrolls horizontally with the Actions column pinned to the right.
+const COLUMN_WIDTHS = { name: 190, task: 130, parameters: 180, nextRun: 165, status: 150, actions: 92 } as const;
+const SCHEDULE_MIN_WIDTH = 200;
+
+function tableMinWidth(showTask: boolean, showParameters: boolean): number {
+  const { name, task, parameters, nextRun, status, actions } = COLUMN_WIDTHS;
+  return name + nextRun + status + actions + SCHEDULE_MIN_WIDTH + (showTask ? task : 0) + (showParameters ? parameters : 0);
+}
 
 const SCHEDULE_ICONS: Record<ScheduleType, ReactNode> = {
   ONE_TIME: <CalendarOutlined />,
@@ -152,6 +158,9 @@ export function SchedulingsTable({
   const [togglingIds, setTogglingIds] = useState<ReadonlySet<string>>(new Set());
   const [search, setSearch] = useState("");
   const now = useNow();
+  const screens = Grid.useBreakpoint();
+  const showTask = Boolean(screens.md);
+  const showParameters = Boolean(screens.xl);
   const localZone = useMemo(() => browserTimeZone(), []);
 
   const rows = useMemo(
@@ -259,7 +268,7 @@ export function SchedulingsTable({
       title: "Parameters",
       key: "parameters",
       width: COLUMN_WIDTHS.parameters,
-      responsive: ["lg"],
+      responsive: ["xl"],
       render: (_, record) => <ParameterTags parameters={record.parameters} />,
     },
     {
@@ -389,7 +398,7 @@ export function SchedulingsTable({
           size="middle"
           pagination={{ pageSize: 10, hideOnSinglePage: true, showSizeChanger: false }}
           // A numeric minimum (not "max-content") so long text wraps inside the fixed column widths.
-          scroll={{ x: TABLE_MIN_WIDTH }}
+          scroll={{ x: tableMinWidth(showTask, showParameters) }}
           locale={{
             emptyText: (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={`No schedulings match “${search.trim()}”`}>

@@ -18,8 +18,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Typography.Text>
         </Flex>
       </Layout.Header>
+      {/* Layout.Content renders the <main> landmark. */}
       <Layout.Content>
-        <main className="app-container app-main">{children}</main>
+        <div className="app-container app-main">{children}</div>
       </Layout.Content>
     </Layout>
   );

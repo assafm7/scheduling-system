@@ -6,7 +6,7 @@ import { ApiError, CONFLICT_MESSAGE } from "@/api/client";
 import type { SchedulingResponse, TaskDefinition } from "@/api/types";
 import { useCreateScheduling, useFetchScheduling, useUpdateScheduling } from "@/hooks/useSchedulings";
 import { useTasks } from "@/hooks/useTasks";
-import { humanizeFieldKey, mapFieldErrors } from "@/utils/formErrors";
+import { mapFieldErrors } from "@/utils/formErrors";
 import { formValuesToSpec, type ScheduleFormValues } from "@/utils/scheduleForm";
 import {
   formValuesToRequest,
@@ -91,7 +91,10 @@ export function SchedulingFormModal({ open, scheduling = null, onClose, afterClo
     }
     if (error.isValidation) {
       const registered = form.getFieldsError().map((field) => field.name);
-      const { fields, unmapped } = mapFieldErrors(error.fieldErrors, registered);
+      const parameterLabels = Object.fromEntries(
+        (selectedTask?.parameters ?? []).map((parameter) => [parameter.name, parameter.label || parameter.name]),
+      );
+      const { fields, unmapped } = mapFieldErrors(error.fieldErrors, registered, parameterLabels);
       if (fields.length > 0) {
         // Paths come from the server at runtime, so they can't be checked against the form's static type.
         form.setFields(fields as Parameters<typeof form.setFields>[0]);
@@ -101,9 +104,7 @@ export function SchedulingFormModal({ open, scheduling = null, onClose, afterClo
         showSaveError(
           <ul className="error-list">
             {unmapped.map(({ key, message: text }) => (
-              <li key={key}>
-                <strong>{humanizeFieldKey(key)}</strong>: {text}
-              </li>
+              <li key={key}>{text}</li>
             ))}
           </ul>,
         );
@@ -255,7 +256,7 @@ export function SchedulingFormModal({ open, scheduling = null, onClose, afterClo
         <Form.Item
           name="taskKey"
           label="Task"
-          rules={[{ required: true, message: "Select a task" }]}
+          rules={[{ required: true, message: "Choose a task to run" }]}
           extra={selectedTask?.description}
         >
           <Select
